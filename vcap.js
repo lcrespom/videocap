@@ -1,4 +1,5 @@
-(function() {
+import * as filters from './filters.js'
+
 
 const WIDTH = 320
 const HEIGHT = 200
@@ -47,25 +48,5 @@ function captureVideo(w, h) {
 }
 
 function renderOutput(imgData) {
-    outCtx.putImageData(grayscale(imgData), 0, 0)
+    outCtx.putImageData(filters.mirror(imgData), 0, 0)
 }
-
-function grayscale(imgData) {
-    let i = 0
-    let data = imgData.data
-    for (let y = 0; y < imgData.height; y++) {
-        for (let x = 0; x < imgData.width; x++) {
-            let r = data[i]
-            let g = data[i + 1]
-            let b = data[i + 2]
-            let gray = 0.3 * r + 0.59 * g + 0.11 * b
-            data[i] = gray
-            data[i + 1] = gray
-            data[i + 2] = gray
-            i += 4
-        }
-    }
-    return imgData
-}
-
-})()
