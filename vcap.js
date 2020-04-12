@@ -48,5 +48,7 @@ function captureVideo(w, h) {
 }
 
 function renderOutput(imgData) {
-    outCtx.putImageData(filters.mirror(imgData), 0, 0)
+    imgData = filters.mirror(imgData)
+    imgData = filters.contrast(imgData, 100)
+    outCtx.putImageData(imgData, 0, 0)
 }
