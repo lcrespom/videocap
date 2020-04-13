@@ -24,7 +24,6 @@ function startWebcam() {
             height: HEIGHT
         }
     }
-    
     navigator.mediaDevices.getUserMedia(constraintObj)
     .then(mediaStreamObj => {
         // Connect the media stream to the input video element
@@ -59,14 +58,30 @@ function renderOutput(imgData, w, h) {
     }
     outCtx.putImageData(imgData, 0, 0)
     if (!captureCol) {
-        outCtx.strokeStyle = '#ffff00'
+        outCtx.strokeStyle = (framect/FRAME_SKIP) % 2 ? '#0000ff' : '#ffff00'
         outCtx.lineWidth = 2
         outCtx.strokeRect(w/2 - 8, h/2 - 8, 16, 16)
     }
 }
 
 function captureColor() {
-    //TODO
+    // Check https://stackoverflow.com/a/39147465/2342681 for rgb to hue
+    captureCol = [255, 0, 128]
+    let data = filteredImgData.data
+    let w = filteredImgData.width
+    let h = filteredImgData.height
+    let r = 0, g = 0, b = 0
+    for (let y = h/2 - 8; y <= h/2 + 8; y++) {
+        for (let x = w/2 - 8; x <= w/2 + 8; x++) {
+            let i = (y*w + x) * 4
+            r += data[i]
+            g += data[i + 1]
+            b += data[i + 2]
+        }
+    }
+    const avg = x => Math.round(x/(17*17))
+    captureCol = [avg(r), avg(g), avg(b)]
+    console.log(captureCol)
 }
 
 

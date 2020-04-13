@@ -1,22 +1,3 @@
-export function grayscale(imgData) {
-    let i = 0
-    let data = imgData.data
-    for (let y = 0; y < imgData.height; y++) {
-        for (let x = 0; x < imgData.width; x++) {
-            let r = data[i]
-            let g = data[i + 1]
-            let b = data[i + 2]
-            let gray = 0.3 * r + 0.59 * g + 0.11 * b
-            data[i] = gray
-            data[i + 1] = gray
-            data[i + 2] = gray
-            i += 4
-        }
-    }
-    return imgData
-}
-
-
 function swapArr(a, i, j) {
     let z = a[i]
     a[i] = a[j]
