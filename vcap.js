@@ -9,6 +9,7 @@ let inCanvas = document.getElementById('capture')
 let inCtx = inCanvas.getContext('2d')
 let outCanvas = document.getElementById('outputv')
 let outCtx = outCanvas.getContext('2d')
+let getcolBut = document.getElementById('getcolor')
 let framect = 0
 const FRAME_SKIP = 4
 let captureCol = null
@@ -55,6 +56,7 @@ function renderOutput(imgData, w, h) {
     imgData = filters.contrast(imgData, 100)
     filteredImgData = imgData
     if (captureCol) {
+        imgData = filters.selectColor(imgData, captureCol, 4096)
     }
     outCtx.putImageData(imgData, 0, 0)
     if (!captureCol) {
@@ -65,8 +67,11 @@ function renderOutput(imgData, w, h) {
 }
 
 function captureColor() {
-    // Check https://stackoverflow.com/a/39147465/2342681 for rgb to hue
-    captureCol = [255, 0, 128]
+    if (captureCol) {
+        captureCol = null
+        getcolBut.innerText = 'Get color'
+        return
+    }
     let data = filteredImgData.data
     let w = filteredImgData.width
     let h = filteredImgData.height
@@ -82,12 +87,14 @@ function captureColor() {
     const avg = x => Math.round(x/(17*17))
     captureCol = [avg(r), avg(g), avg(b)]
     console.log(captureCol)
+    getcolBut.innerText = 'Try again'
 }
 
 
 function main() {
     startWebcam()
-    document.getElementById('getcolor').onclick = captureColor
+    getcolBut.onclick = captureColor
+    getcolBut.focus()
 }
 
 main()

@@ -33,3 +33,25 @@ export function contrast(imgData, contrast) {  // Input range [-100..100]
     }
     return imgData
 }
+
+
+function distArray(a1, a2) {
+    let dist = 0
+    for (let i = 0; i < a1.length; i++) {
+        let d = a1[i] - a2[i]
+        dist += d * d
+    }
+    return dist
+}
+
+export function selectColor(imgData, [r, g, b], maxDist) {
+    //TODO: check https://stackoverflow.com/a/39147465/2342681 for rgb to hue
+    let d = imgData.data
+    for (let i = 0; i < d.length; i += 4) {   // r, g, b, a
+        let dist = distArray([r, g, b], [d[i], d[i + 1], d[i + 2]])
+        if (dist > maxDist) {
+            d[i] = d[i + 1] = d[i + 2] = 0
+        }
+    }
+    return imgData
+}
