@@ -56,7 +56,7 @@ function renderOutput(imgData, w, h) {
     imgData = filters.contrast(imgData, 100)
     filteredImgData = imgData
     if (captureCol) {
-        imgData = filters.selectColor(imgData, captureCol, 4096)
+        imgData = filters.selectColor(imgData, captureCol, 2048)
     }
     outCtx.putImageData(imgData, 0, 0)
     if (!captureCol) {
