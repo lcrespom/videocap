@@ -7,6 +7,8 @@ let ctx = canvas.getContext('2d')
 let net
 
 function startWebcam() {
+    video.width = WIDTH
+    video.height = HEIGHT
     let constraintObj = {
         audio: false,
         video: {
