@@ -62,10 +62,10 @@ function drawKeypoints(keypoints, ctx, minConfidence = 0.5, scale = 1) {
     // leftWrist, rightWrist, leftHip, rightHip,
     // leftKnee, rightKnee, leftAnkle, rightAnkle
     let kpMap = keypoints2map(keypoints)
-    drawSegment(kpMap, 'leftShoulder', 'rightShoulder')
-    drawSegment(kpMap, 'leftShoulder', 'leftHip')
-    drawSegment(kpMap, 'rightShoulder', 'rightHip')
-    drawSegment(kpMap, 'leftHip', 'rightHip')
+    drawSegment(ctx, kpMap, 'leftShoulder', 'rightShoulder')
+    drawSegment(ctx, kpMap, 'leftShoulder', 'leftHip')
+    drawSegment(ctx, kpMap, 'rightShoulder', 'rightHip')
+    drawSegment(ctx, kpMap, 'leftHip', 'rightHip')
     console.log(kpMap.leftShoulder.position)
 }
 
