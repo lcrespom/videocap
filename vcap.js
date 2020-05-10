@@ -35,7 +35,7 @@ async function captureVideo(w, h) {
     ctx.save()
     ctx.scale(-1, 1)
     ctx.translate(-video.videoWidth, 0)
-    ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight)
+    ctx.drawImage(video, 0, 0)
     ctx.restore()
     let pose = await getPose(video)
     requestAnimationFrame(() => captureVideo(w, h))
