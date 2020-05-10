@@ -1,9 +1,10 @@
-const WIDTH = 400
-const HEIGHT = 400
+const WIDTH = 600
+const HEIGHT = 500
 
 let video = document.getElementById('inputv')
 let canvas = document.getElementById('outputv')
 let ctx = canvas.getContext('2d')
+let net
 
 function startWebcam() {
     let constraintObj = {
@@ -30,17 +31,54 @@ function startWebcam() {
     })
 }
 
-function captureVideo(w, h) {
+async function captureVideo(w, h) {
     ctx.save()
     ctx.scale(-1, 1)
     ctx.translate(-video.videoWidth, 0)
     ctx.drawImage(video, 0, 0, video.videoWidth, video.videoHeight)
     ctx.restore()
+    let pose = await getPose(video)
     requestAnimationFrame(() => captureVideo(w, h))
 }
 
+async function getPose(video) {
+    let pose = await net.estimateSinglePose(video, { flipHorizontal: true });
+    drawKeypoints(pose.keypoints)
+    //console.dir(pose)
+}
 
-function main() {
+function keypoints2map(keypoints) {
+    let kpMap = {}
+    for (let kp of keypoints)
+        kpMap[kp.part] = kp
+    return kpMap
+}
+
+function drawSegment(ctx, kpMap, from, to) {}
+
+function drawKeypoints(keypoints, ctx, minConfidence = 0.5, scale = 1) {
+    // nose, leftEye, rightEye, leftEar, rightEar,
+    // leftShoulder, rightShoulder, leftElbow, rightElbow,
+    // leftWrist, rightWrist, leftHip, rightHip,
+    // leftKnee, rightKnee, leftAnkle, rightAnkle
+    let kpMap = keypoints2map(keypoints)
+    drawSegment(kpMap, 'leftShoulder', 'rightShoulder')
+    drawSegment(kpMap, 'leftShoulder', 'leftHip')
+    drawSegment(kpMap, 'rightShoulder', 'rightHip')
+    drawSegment(kpMap, 'leftHip', 'rightHip')
+    console.log(kpMap.leftShoulder.position)
+}
+
+
+async function main() {
+    net = await posenet.load({
+        architecture: 'MobileNetV1',
+        outputStride: 16,
+        inputResolution: 500,
+        multiplier: 0.5,
+        quantBytes: 2
+    })
+    console.dir(net)
     startWebcam()
 }
 
