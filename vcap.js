@@ -45,7 +45,7 @@ async function captureVideo(w, h) {
 
 async function getPose(video) {
     let pose = await net.estimateSinglePose(video, { flipHorizontal: true });
-    drawKeypoints(pose.keypoints)
+    drawKeypoints(pose.keypoints, ctx)
     //console.dir(pose)
 }
 
@@ -56,7 +56,14 @@ function keypoints2map(keypoints) {
     return kpMap
 }
 
-function drawSegment(ctx, kpMap, from, to) {}
+function drawSegment(ctx, kpMap, from, to) {
+    let {x: x1, y: y1} = kpMap[from].position
+    let {x: x2, y: y2} = kpMap[to].position
+    ctx.beginPath()
+    ctx.moveTo(x1, y1)
+    ctx.lineTo(x2, y2)
+    ctx.stroke()
+}
 
 function drawKeypoints(keypoints, ctx, minConfidence = 0.5, scale = 1) {
     // nose, leftEye, rightEye, leftEar, rightEar,
@@ -64,10 +71,12 @@ function drawKeypoints(keypoints, ctx, minConfidence = 0.5, scale = 1) {
     // leftWrist, rightWrist, leftHip, rightHip,
     // leftKnee, rightKnee, leftAnkle, rightAnkle
     let kpMap = keypoints2map(keypoints)
+    ctx.save()
     drawSegment(ctx, kpMap, 'leftShoulder', 'rightShoulder')
     drawSegment(ctx, kpMap, 'leftShoulder', 'leftHip')
     drawSegment(ctx, kpMap, 'rightShoulder', 'rightHip')
     drawSegment(ctx, kpMap, 'leftHip', 'rightHip')
+    ctx.restore()
     console.log(kpMap.leftShoulder.position)
 }
 
