@@ -34,19 +34,19 @@ function startWebcam() {
 }
 
 async function captureVideo(w, h) {
+    //ctx.clearRect(0, 0, WIDTH, HEIGHT)
+    //drawVideo()
+    let pose = await net.estimateSinglePose(video, { flipHorizontal: true })
+    drawPose(pose.keypoints, ctx)
+    requestAnimationFrame(() => captureVideo(w, h))
+}
+
+function drawVideo() {
     ctx.save()
     ctx.scale(-1, 1)
     ctx.translate(-video.videoWidth, 0)
     ctx.drawImage(video, 0, 0)
     ctx.restore()
-    let pose = await getPose(video)
-    requestAnimationFrame(() => captureVideo(w, h))
-}
-
-async function getPose(video) {
-    let pose = await net.estimateSinglePose(video, { flipHorizontal: true });
-    drawKeypoints(pose.keypoints, ctx)
-    //console.dir(pose)
 }
 
 function keypoints2map(keypoints) {
@@ -59,23 +59,25 @@ function keypoints2map(keypoints) {
 function drawSegment(ctx, kpMap, from, to) {
     let {x: x1, y: y1} = kpMap[from].position
     let {x: x2, y: y2} = kpMap[to].position
-    ctx.beginPath()
     ctx.moveTo(x1, y1)
     ctx.lineTo(x2, y2)
-    ctx.stroke()
 }
 
-function drawKeypoints(keypoints, ctx, minConfidence = 0.5, scale = 1) {
+function drawPose(keypoints, ctx, minConfidence = 0.5, scale = 1) {
     // nose, leftEye, rightEye, leftEar, rightEar,
     // leftShoulder, rightShoulder, leftElbow, rightElbow,
     // leftWrist, rightWrist, leftHip, rightHip,
     // leftKnee, rightKnee, leftAnkle, rightAnkle
     let kpMap = keypoints2map(keypoints)
     ctx.save()
+    ctx.strokeStyle = 'cyan'
+    ctx.lineWidth = 2
+    ctx.beginPath()
     drawSegment(ctx, kpMap, 'leftShoulder', 'rightShoulder')
     drawSegment(ctx, kpMap, 'leftShoulder', 'leftHip')
     drawSegment(ctx, kpMap, 'rightShoulder', 'rightHip')
     drawSegment(ctx, kpMap, 'leftHip', 'rightHip')
+    ctx.stroke()
     ctx.restore()
     console.log(kpMap.leftShoulder.position)
 }
