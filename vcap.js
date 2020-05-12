@@ -101,9 +101,9 @@ function drawPose(keypoints, ctx, minConfidence = 0.5, scale = 1) {
 
 async function main() {
     net = await posenet.load({
-        architecture: 'MobileNetV1',
+        architecture: 'MobileNetV1',    // Or ResNet50
         outputStride: 16,
-        inputResolution: 500,
+        inputResolution: 250,
         multiplier: 0.5,
         quantBytes: 2
     })
