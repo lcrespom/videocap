@@ -2,6 +2,24 @@ body {
     font-family: sans-serif;
 }
 
+button {
+    width: 9em;
+    height: 3em;
+    border-radius: 4px;
+    color: white;
+    font-size: 10pt;
+    background-color: slateblue;
+    outline: none;
+}
+
+button:disabled {
+    background-color: slategray;
+}
+
+button:active {
+    background-color: cornflowerblue;
+}
+
 .hidden {
     display: none;
 }

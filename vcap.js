@@ -1,3 +1,6 @@
+import * as recorder from './recorder.js'
+
+
 const WIDTH = 600
 const HEIGHT = 500
 
@@ -38,6 +41,7 @@ async function captureVideo(w, h) {
     ctx.clearRect(0, 0, WIDTH, HEIGHT)
     drawVideo()
     drawPose(pose.keypoints, ctx)
+    recorder.sendPose(pose)
     requestAnimationFrame(() => captureVideo(w, h))
 }
 
@@ -108,6 +112,7 @@ async function main() {
         quantBytes: 2
     })
     startWebcam()
+    recorder.init()
 }
 
 main()
