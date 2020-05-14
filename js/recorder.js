@@ -1,12 +1,17 @@
+import * as draw from './draw.js'
+
+
 let startTime
 let recording = false
 let recBut = document.getElementById('record')
 let playBut = document.getElementById('play')
 let recData
 let playPos
+let ctx
 
 
-export function init() {
+export function init(w, h) {
+    initCanvas(w, h)
     recBut.addEventListener('click', _ => {
         recording = !recording
         if (recording)
@@ -17,6 +22,13 @@ export function init() {
     playBut.addEventListener('click', _ => {
         playRecording()
     })
+}
+
+function initCanvas(w, h) {
+    let canvas = document.getElementById('replay')
+    canvas.width = w
+    canvas.height = h
+    ctx = canvas.getContext('2d')
 }
 
 export function sendPose(pose) {
@@ -42,7 +54,7 @@ function playStep() {
     let time = Date.now() - startTime
     let item = recData[playPos]
     if (item.time >= time) {
-        drawPose(item.pose)
+        draw.drawPose(item.pose.keypoints, ctx)
         playPos++
     }
     if (playPos >= recData.length) return
