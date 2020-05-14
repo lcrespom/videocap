@@ -7,6 +7,7 @@ let recBut = document.getElementById('record')
 let playBut = document.getElementById('play')
 let recData
 let playPos
+let canvas
 let ctx
 
 
@@ -25,7 +26,7 @@ export function init(w, h) {
 }
 
 function initCanvas(w, h) {
-    let canvas = document.getElementById('replay')
+    canvas = document.getElementById('replay')
     canvas.width = w
     canvas.height = h
     ctx = canvas.getContext('2d')
@@ -54,6 +55,7 @@ function playStep() {
     let time = Date.now() - startTime
     let item = recData[playPos]
     if (item.time >= time) {
+        ctx.clearRect(0, 0, canvas.width, canvas.height)
         draw.drawPose(item.pose.keypoints, ctx)
         playPos++
     }
@@ -65,5 +67,4 @@ function playRecording() {
     playPos = 0
     startTime = Date.now()
     playStep()
-    //console.dir(recData)
 }

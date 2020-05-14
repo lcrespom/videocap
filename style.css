@@ -2,6 +2,10 @@ body {
     font-family: sans-serif;
 }
 
+canvas {
+    background-color: black;
+}
+
 button {
     width: 9em;
     height: 3em;
