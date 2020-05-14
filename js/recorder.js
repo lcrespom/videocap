@@ -59,8 +59,8 @@ function playStep() {
         draw.drawPose(item.pose.keypoints, ctx)
         playPos++
     }
-    if (playPos >= recData.length) return
-    requestAnimationFrame(playStep)
+    if (playPos < recData.length)
+        requestAnimationFrame(playStep)
 }
 
 function playRecording() {
