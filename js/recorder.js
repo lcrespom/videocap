@@ -34,14 +34,14 @@ function initCanvas(w, h) {
 
 export function sendPose(pose) {
     if (!recording) return
-    let time = Date.now() - startTime
+    let time = performance.now() - startTime
     recData.push({ time, pose })
 }
 
 function startRecording() {
     playBut.disabled = true
     recBut.innerText = 'Stop recording'
-    startTime = Date.now()
+    startTime = performance.now()
     recData = []
 }
 
@@ -52,7 +52,7 @@ function stopRecording() {
 
 
 function playStep() {
-    let time = Date.now() - startTime
+    let time = performance.now() - startTime
     let item = recData[playPos]
     if (item.time >= time) {
         ctx.clearRect(0, 0, canvas.width, canvas.height)
@@ -65,6 +65,6 @@ function playStep() {
 
 function playRecording() {
     playPos = 0
-    startTime = Date.now()
+    startTime = performance.now()
     playStep()
 }
