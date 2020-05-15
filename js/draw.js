@@ -16,14 +16,14 @@ function drawSegment({ ctx, kpMap, minConfidence }, from, to) {
     ctx.lineTo(x2, y2)
 }
 
-export function drawPose(keypoints, ctx, minConfidence = 0.5, scale = 1) {
+export function drawPose(keypoints, ctx, style = 'cyan', minConfidence = 0.5) {
     // nose, leftEye, rightEye, leftEar, rightEar,
     // leftShoulder, rightShoulder, leftElbow, rightElbow,
     // leftWrist, rightWrist, leftHip, rightHip,
     // leftKnee, rightKnee, leftAnkle, rightAnkle
     let kpMap = keypoints2map(keypoints)
     ctx.save()
-    ctx.strokeStyle = 'cyan'
+    ctx.strokeStyle = style
     ctx.lineWidth = 2
     ctx.beginPath()
     // Torso

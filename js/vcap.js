@@ -64,7 +64,7 @@ async function main() {
         quantBytes: 2
     })
     startWebcam()
-    recorder.init(WIDTH, HEIGHT)
+    recorder.init(ctx)
 }
 
 main()

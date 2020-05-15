@@ -7,12 +7,11 @@ let recBut = document.getElementById('record')
 let playBut = document.getElementById('play')
 let recData
 let playPos
-let canvas
 let ctx
 
 
-export function init(w, h) {
-    initCanvas(w, h)
+export function init(targetCtx) {
+    ctx = targetCtx
     recBut.addEventListener('click', _ => {
         recording = !recording
         if (recording)
@@ -25,12 +24,6 @@ export function init(w, h) {
     })
 }
 
-function initCanvas(w, h) {
-    canvas = document.getElementById('replay')
-    canvas.width = w
-    canvas.height = h
-    ctx = canvas.getContext('2d')
-}
 
 export function sendPose(pose) {
     if (!recording) return
@@ -54,9 +47,8 @@ function stopRecording() {
 function playStep() {
     let time = performance.now() - startTime
     let item = recData[playPos]
-    if (item.time >= time) {
-        ctx.clearRect(0, 0, canvas.width, canvas.height)
-        draw.drawPose(item.pose.keypoints, ctx)
+    if (time >= item.time) {
+        draw.drawPose(item.pose.keypoints, ctx, 'red')
         playPos++
     }
     if (playPos < recData.length)
@@ -67,4 +59,5 @@ function playRecording() {
     playPos = 0
     startTime = performance.now()
     playStep()
+    //console.dir(recData)
 }
