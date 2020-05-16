@@ -3,6 +3,9 @@
 - Build process
 - Use Svelte :-)
 
+# Links
+- Article on PoseNet: https://medium.com/tensorflow/real-time-human-pose-estimation-in-the-browser-with-tensorflow-js-7dd0bc881cd5
+
 # Interaction
 - Record
     - Show video + wireframes
