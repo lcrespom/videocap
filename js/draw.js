@@ -24,7 +24,7 @@ export function drawPose(keypoints, ctx, style = 'cyan', minConfidence = 0.5) {
     let kpMap = keypoints2map(keypoints)
     ctx.save()
     ctx.strokeStyle = style
-    ctx.lineWidth = 2
+    ctx.lineWidth = 3
     ctx.beginPath()
     // Torso
     let drawInfo = { ctx, kpMap, minConfidence }
