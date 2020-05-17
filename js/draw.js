@@ -1,3 +1,9 @@
+// Keypoint names:
+//  Head: nose, leftEye, rightEye, leftEar, rightEar
+//  Torso: leftShoulder, rightShoulder, leftHip, rightHip
+//  Arms: leftElbow, rightElbow, leftWrist, rightWrist
+//  Legs: leftKnee, rightKnee, leftAnkle, rightAnkle
+
 function keypoints2map(keypoints) {
     let kpMap = {}
     for (let kp of keypoints)
@@ -39,19 +45,7 @@ function translate(kp1, kp2) {
     }
 }
 
-export function drawPose(keypoints, ctx, style = 'cyan', minConfidence = 0.5) {
-    // nose, leftEye, rightEye, leftEar, rightEar,
-    // leftShoulder, rightShoulder, leftElbow, rightElbow,
-    // leftWrist, rightWrist, leftHip, rightHip,
-    // leftKnee, rightKnee, leftAnkle, rightAnkle
-    let kpMap = keypoints2map(keypoints)
-    kpMap.neck = midPoint(kpMap.leftShoulder, kpMap.rightShoulder)
-    kpMap.hat = translate(kpMap.neck, midPoint(kpMap.leftEar, kpMap.rightEar))
-    ctx.save()
-    ctx.strokeStyle = style
-    ctx.lineWidth = 3
-    ctx.beginPath()
-    let drawInfo = { ctx, kpMap, minConfidence }
+function drawHeadAndTorso(drawInfo) {
     // Head
     drawSegment(drawInfo, 'neck', 'leftEar')
     drawSegment(drawInfo, 'neck', 'rightEar')
@@ -62,6 +56,9 @@ export function drawPose(keypoints, ctx, style = 'cyan', minConfidence = 0.5) {
     drawSegment(drawInfo, 'leftShoulder', 'leftHip')
     drawSegment(drawInfo, 'rightShoulder', 'rightHip')
     drawSegment(drawInfo, 'leftHip', 'rightHip')
+}
+
+function drawArmsAndLegs(drawInfo) {
     // Arms
     drawSegment(drawInfo, 'leftShoulder', 'leftElbow')
     drawSegment(drawInfo, 'leftElbow', 'leftWrist')
@@ -72,7 +69,23 @@ export function drawPose(keypoints, ctx, style = 'cyan', minConfidence = 0.5) {
     drawSegment(drawInfo, 'leftKnee', 'leftAnkle')
     drawSegment(drawInfo, 'rightHip', 'rightKnee')
     drawSegment(drawInfo, 'rightKnee', 'rightAnkle')
-    // Draw it
+}
+
+function initDrawInfo(keypoints, ctx, style, minConfidence = 0.5) {
+    let kpMap = keypoints2map(keypoints)
+    kpMap.neck = midPoint(kpMap.leftShoulder, kpMap.rightShoulder)
+    kpMap.hat = translate(kpMap.neck, midPoint(kpMap.leftEar, kpMap.rightEar))
+    ctx.strokeStyle = style
+    ctx.lineWidth = 5
+    return { ctx, kpMap, minConfidence }
+}
+
+export function drawPose(keypoints, ctx, style = 'lime', minConfidence) {
+    ctx.save()
+    ctx.beginPath()
+    let drawInfo = initDrawInfo(keypoints, ctx, style, minConfidence)
+    drawHeadAndTorso(drawInfo)
+    drawArmsAndLegs(drawInfo)
     ctx.stroke()
     ctx.restore()
 }

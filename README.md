@@ -1,7 +1,10 @@
 # ToDo
-- Refactor to match interaction
-- Build process
-- Use Svelte :-)
+- Nicer stickman on playback
+    - Thicker arms/legs
+    - Fill torso and head
+- Editor
+    - Range slider input for time
+    - Key/button for setting score points
 
 # Links
 - Article on PoseNet: https://medium.com/tensorflow/real-time-human-pose-estimation-in-the-browser-with-tensorflow-js-7dd0bc881cd5
@@ -17,6 +20,7 @@
     - Let user mark score points
     - Highilght potentially incorrect captures
     - Let user select and remove incorrect captures
+    - Save/load poses from pose library
     - Share dance data via copy+paste JSON / URL
 
 - Music
