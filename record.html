@@ -14,12 +14,15 @@
 </head>
 
 <body>
+  <!-- Input video used to record from webcam -->
+  <video id="inputv" class="hidden"></video>
   <!-- Output canvas, where video is displayed -->
-  <canvas id="canvas"></canvas>
+  <canvas id="outputv"></canvas>
   <div>
-    <button id="play">Play dance</button>
+    <button id="record">Record dance</button>
+    <button id="play" disabled>Replay dance</button>
   </div>
   
-  <script type="module" src="js/player.js"></script>
+  <script type="module" src="js/vcap.js"></script>
 </body>
 </html>

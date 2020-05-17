@@ -9,24 +9,29 @@
 # Interaction
 - Record
     - Show video + wireframes
-    - Save JSON
+    - Save song data to local storage
 
 - Edit recording
-    - Load JSON
+    - Load song data from local storage
     - Move through timeline
     - Let user mark score points
     - Highilght potentially incorrect captures
     - Let user select and remove incorrect captures
+    - Share song data via copy+paste JSON / URL
 
 - Music
     - MP3 URL
         - check https://www.hongkiat.com/blog/creative-common-music-download/
         - cctrax.com, jamendo.com, etc.
     - Play music upon *record* and *play* start
-    - Save song URL in JSON
-    - Share JSON via copy+paste / URL
+    - Save song URL in song data
 
 - Play game
+    - Load song data from:
+        - Local storage
+        - JSON
+        - URL
+        - Provide some default songs and encourage sharing
     - Separate HTML page
     - Show thick stickman figure
     - Shine when player matches score points
