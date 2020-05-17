@@ -1,12 +1,8 @@
-import * as draw from './draw.js'
-
-
 let startTime
 let recording = false
 let recBut = document.getElementById('record')
 let playBut = document.getElementById('play')
 let recData
-let playPos
 let ctx
 
 
@@ -20,7 +16,7 @@ export function init(targetCtx) {
             stopRecording()
     })
     playBut.addEventListener('click', _ => {
-        playRecording()
+        document.location = '/'
     })
 }
 
@@ -41,24 +37,6 @@ function startRecording() {
 function stopRecording() {
     playBut.disabled = false
     recBut.innerText = 'Record dance'
-    localStorage.setItem('dance', { poses: recData })
-}
-
-
-function playStep() {
-    let time = performance.now() - startTime
-    let item = recData[playPos]
-    if (time >= item.time) {
-        draw.drawPose(item.pose.keypoints, ctx, 'red')
-        playPos++
-    }
-    if (playPos < recData.length)
-        requestAnimationFrame(playStep)
-}
-
-function playRecording() {
-    playPos = 0
-    startTime = performance.now()
-    playStep()
-    //console.dir(recData)
+    let danceStr = JSON.stringify({ poses: recData })
+    localStorage.setItem('dance', danceStr)
 }
