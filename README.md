@@ -9,25 +9,25 @@
 # Interaction
 - Record
     - Show video + wireframes
-    - Save song data to local storage
+    - Save dance data to local storage
 
 - Edit recording
-    - Load song data from local storage
+    - Load dance data from local storage
     - Move through timeline
     - Let user mark score points
     - Highilght potentially incorrect captures
     - Let user select and remove incorrect captures
-    - Share song data via copy+paste JSON / URL
+    - Share dance data via copy+paste JSON / URL
 
 - Music
     - MP3 URL
         - check https://www.hongkiat.com/blog/creative-common-music-download/
         - cctrax.com, jamendo.com, etc.
     - Play music upon *record* and *play* start
-    - Save song URL in song data
+    - Save song URL in dance data
 
 - Play game
-    - Load song data from:
+    - Load dance data from:
         - Local storage
         - JSON
         - URL

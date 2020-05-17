@@ -41,6 +41,7 @@ function startRecording() {
 function stopRecording() {
     playBut.disabled = false
     recBut.innerText = 'Record dance'
+    localStorage.setItem('dance', { poses: recData })
 }
 
 

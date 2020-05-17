@@ -16,18 +16,48 @@ function drawSegment({ ctx, kpMap, minConfidence }, from, to) {
     ctx.lineTo(x2, y2)
 }
 
+function midPoint(kp1, kp2) {
+    return {
+        position: {
+            x: (kp1.position.x + kp2.position.x) / 2,
+            y: (kp1.position.y + kp2.position.y) / 2
+        },
+        score: Math.min(kp1.score, kp2.score)
+    }
+}
+
+function translate(kp1, kp2) {
+    const HEAD_FLATTEN = 0.7
+    let dx = kp2.position.x - kp1.position.x
+    let dy = kp2.position.y - kp1.position.y
+    return {
+        position: {
+            x: kp2.position.x + dx * HEAD_FLATTEN,
+            y: kp2.position.y + dy * HEAD_FLATTEN
+        },
+        score: Math.min(kp1.score, kp2.score)
+    }
+}
+
 export function drawPose(keypoints, ctx, style = 'cyan', minConfidence = 0.5) {
     // nose, leftEye, rightEye, leftEar, rightEar,
     // leftShoulder, rightShoulder, leftElbow, rightElbow,
     // leftWrist, rightWrist, leftHip, rightHip,
     // leftKnee, rightKnee, leftAnkle, rightAnkle
     let kpMap = keypoints2map(keypoints)
+    kpMap.neck = midPoint(kpMap.leftShoulder, kpMap.rightShoulder)
+    kpMap.hat = translate(kpMap.neck, midPoint(kpMap.leftEar, kpMap.rightEar))
     ctx.save()
     ctx.strokeStyle = style
     ctx.lineWidth = 3
     ctx.beginPath()
-    // Torso
     let drawInfo = { ctx, kpMap, minConfidence }
+    // Head
+    drawSegment(drawInfo, 'neck', 'leftEar')
+    drawSegment(drawInfo, 'neck', 'rightEar')
+    drawSegment(drawInfo, 'hat', 'leftEar')
+    drawSegment(drawInfo, 'hat', 'rightEar')
+    // Torso
     drawSegment(drawInfo, 'leftShoulder', 'rightShoulder')
     drawSegment(drawInfo, 'leftShoulder', 'leftHip')
     drawSegment(drawInfo, 'rightShoulder', 'rightHip')
