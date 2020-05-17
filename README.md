@@ -1,7 +1,8 @@
 # ToDo
 - Nicer stickman on playback
-    - Thicker arms/legs
-    - Fill torso and head
+    - [x] Thicker arms/legs
+    - [x] Fill torso and head
+    - [ ] Arms over torso/head should be visible
 - Editor
     - Range slider input for time
     - Key/button for setting score points

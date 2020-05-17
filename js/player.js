@@ -17,7 +17,7 @@ function playStep() {
     let item = dance.poses[playPos]
     if (time >= item.time) {
         ctx.clearRect(0, 0, WIDTH, HEIGHT)
-        draw.drawPose(item.pose.keypoints, ctx, 'red')
+        draw.fillPose(item.pose.keypoints, ctx)
         playPos++
     }
     if (playPos < dance.poses.length)
@@ -35,7 +35,6 @@ function main() {
     let danceStr = localStorage.getItem('dance')
     if (!danceStr) return
     dance = JSON.parse(danceStr)
-    console.dir(dance)
     playBut.disabled = false
     playBut.addEventListener('click', _ => {
         playRecording()

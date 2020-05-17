@@ -11,17 +11,6 @@ function keypoints2map(keypoints) {
     return kpMap
 }
 
-function drawSegment({ ctx, kpMap, minConfidence }, from, to) {
-    let kpFrom = kpMap[from]
-    let kpTo = kpMap[to]
-    if (kpFrom.score < minConfidence || kpTo.score < minConfidence)
-        return
-    let {x: x1, y: y1} = kpFrom.position
-    let {x: x2, y: y2} = kpTo.position
-    ctx.moveTo(x1, y1)
-    ctx.lineTo(x2, y2)
-}
-
 function midPoint(kp1, kp2) {
     return {
         position: {
@@ -45,6 +34,30 @@ function translate(kp1, kp2) {
     }
 }
 
+function drawSegment({ ctx, kpMap, minConfidence }, from, to) {
+    let kpFrom = kpMap[from]
+    let kpTo = kpMap[to]
+    if (kpFrom.score < minConfidence || kpTo.score < minConfidence)
+        return
+    let {x: x1, y: y1} = kpFrom.position
+    let {x: x2, y: y2} = kpTo.position
+    ctx.moveTo(x1, y1)
+    ctx.lineTo(x2, y2)
+}
+
+function fillPolygon({ ctx, kpMap, minConfidence }, pnames) {
+    let points = pnames.map(n => kpMap[n])
+    for (let p of points)
+        if (p.score < minConfidence) return
+    ctx.beginPath()
+    ctx.moveTo(points[0].position.x, points[0].position.y)
+    for (let i = 1; i < points.length; i++)
+        ctx.lineTo(points[i].position.x, points[i].position.y)
+    ctx.lineTo(points[0].position.x, points[0].position.y)
+    ctx.closePath()
+    ctx.fill()
+}
+
 function drawHeadAndTorso(drawInfo) {
     // Head
     drawSegment(drawInfo, 'neck', 'leftEar')
@@ -56,6 +69,12 @@ function drawHeadAndTorso(drawInfo) {
     drawSegment(drawInfo, 'leftShoulder', 'leftHip')
     drawSegment(drawInfo, 'rightShoulder', 'rightHip')
     drawSegment(drawInfo, 'leftHip', 'rightHip')
+}
+
+function fillHeadAndTorso(drawInfo) {
+    fillPolygon(drawInfo, ['neck', 'rightEar', 'hat', 'leftEar'] )
+    fillPolygon(drawInfo,
+        ['leftShoulder', 'leftHip', 'rightHip', 'rightShoulder'])
 }
 
 function drawArmsAndLegs(drawInfo) {
@@ -71,20 +90,32 @@ function drawArmsAndLegs(drawInfo) {
     drawSegment(drawInfo, 'rightKnee', 'rightAnkle')
 }
 
-function initDrawInfo(keypoints, ctx, style, minConfidence = 0.5) {
+function initDrawInfo(keypoints, ctx, style, minConfidence) {
     let kpMap = keypoints2map(keypoints)
     kpMap.neck = midPoint(kpMap.leftShoulder, kpMap.rightShoulder)
     kpMap.hat = translate(kpMap.neck, midPoint(kpMap.leftEar, kpMap.rightEar))
     ctx.strokeStyle = style
-    ctx.lineWidth = 5
     return { ctx, kpMap, minConfidence }
 }
 
-export function drawPose(keypoints, ctx, style = 'lime', minConfidence) {
+export function drawPose(keypoints, ctx, style = 'lime', minConfidence = 0.5) {
     ctx.save()
     ctx.beginPath()
+    ctx.lineWidth = 5
     let drawInfo = initDrawInfo(keypoints, ctx, style, minConfidence)
     drawHeadAndTorso(drawInfo)
+    drawArmsAndLegs(drawInfo)
+    ctx.stroke()
+    ctx.restore()
+}
+
+export function fillPose(keypoints, ctx, style = 'red', minConfidence = 0.5) {
+    ctx.save()
+    ctx.lineWidth = 15
+    ctx.fillStyle = style
+    let drawInfo = initDrawInfo(keypoints, ctx, style, minConfidence)
+    fillHeadAndTorso(drawInfo)
+    ctx.beginPath()
     drawArmsAndLegs(drawInfo)
     ctx.stroke()
     ctx.restore()
