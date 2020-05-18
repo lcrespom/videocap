@@ -34,15 +34,15 @@ function translate(kp1, kp2) {
     }
 }
 
-function drawSegment({ ctx, kpMap, minConfidence }, from, to) {
-    let kpFrom = kpMap[from]
-    let kpTo = kpMap[to]
-    if (kpFrom.score < minConfidence || kpTo.score < minConfidence)
-        return
-    let {x: x1, y: y1} = kpFrom.position
-    let {x: x2, y: y2} = kpTo.position
-    ctx.moveTo(x1, y1)
-    ctx.lineTo(x2, y2)
+function drawLines({ ctx, kpMap, minConfidence }, pnames) {
+    for (let pname of pnames)
+        if (kpMap[pname].score < minConfidence) return
+    let { x, y } = kpMap[pnames[0]].position
+    ctx.moveTo(x, y)
+    for (let i = 1; i < pnames.length; i++) {
+        let { x, y } = kpMap[pnames[i]].position
+        ctx.lineTo(x, y)
+    }
 }
 
 function fillPolygon({ ctx, kpMap, minConfidence }, pnames) {
@@ -60,15 +60,11 @@ function fillPolygon({ ctx, kpMap, minConfidence }, pnames) {
 
 function drawHeadAndTorso(drawInfo) {
     // Head
-    drawSegment(drawInfo, 'neck', 'leftEar')
-    drawSegment(drawInfo, 'neck', 'rightEar')
-    drawSegment(drawInfo, 'hat', 'leftEar')
-    drawSegment(drawInfo, 'hat', 'rightEar')
+    drawLines(drawInfo, ['neck', 'rightEar', 'hat', 'leftEar', 'neck'])
     // Torso
-    drawSegment(drawInfo, 'leftShoulder', 'rightShoulder')
-    drawSegment(drawInfo, 'leftShoulder', 'leftHip')
-    drawSegment(drawInfo, 'rightShoulder', 'rightHip')
-    drawSegment(drawInfo, 'leftHip', 'rightHip')
+    drawLines(drawInfo, [
+        'leftShoulder', 'leftHip', 'rightHip', 'rightShoulder', 'leftShoulder'
+    ])
 }
 
 function fillHeadAndTorso(drawInfo) {
@@ -79,15 +75,11 @@ function fillHeadAndTorso(drawInfo) {
 
 function drawArmsAndLegs(drawInfo) {
     // Arms
-    drawSegment(drawInfo, 'leftShoulder', 'leftElbow')
-    drawSegment(drawInfo, 'leftElbow', 'leftWrist')
-    drawSegment(drawInfo, 'rightShoulder', 'rightElbow')
-    drawSegment(drawInfo, 'rightElbow', 'rightWrist')
+    drawLines(drawInfo, ['leftShoulder', 'leftElbow', 'leftWrist'])
+    drawLines(drawInfo, ['rightShoulder', 'rightElbow', 'rightWrist'])
     // Legs
-    drawSegment(drawInfo, 'leftHip', 'leftKnee')
-    drawSegment(drawInfo, 'leftKnee', 'leftAnkle')
-    drawSegment(drawInfo, 'rightHip', 'rightKnee')
-    drawSegment(drawInfo, 'rightKnee', 'rightAnkle')
+    drawLines(drawInfo, ['leftHip', 'leftKnee', 'leftAnkle'])
+    drawLines(drawInfo, ['rightHip', 'rightKnee', 'rightAnkle'])
 }
 
 function initDrawInfo(keypoints, ctx, style, minConfidence) {
@@ -101,6 +93,7 @@ function initDrawInfo(keypoints, ctx, style, minConfidence) {
 export function drawPose(keypoints, ctx, style = 'lime', minConfidence = 0.5) {
     ctx.save()
     ctx.beginPath()
+    ctx.lineJoin = 'round'
     ctx.lineWidth = 5
     let drawInfo = initDrawInfo(keypoints, ctx, style, minConfidence)
     drawHeadAndTorso(drawInfo)
@@ -111,6 +104,7 @@ export function drawPose(keypoints, ctx, style = 'lime', minConfidence = 0.5) {
 
 export function fillPose(keypoints, ctx, style = 'red', minConfidence = 0.5) {
     ctx.save()
+    ctx.lineJoin = 'round'
     ctx.lineWidth = 15
     ctx.fillStyle = style
     let drawInfo = initDrawInfo(keypoints, ctx, style, minConfidence)
