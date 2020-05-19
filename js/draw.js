@@ -87,13 +87,13 @@ function initDrawInfo(keypoints, ctx, style, minConfidence) {
     kpMap.neck = midPoint(kpMap.leftShoulder, kpMap.rightShoulder)
     kpMap.hat = translate(kpMap.neck, midPoint(kpMap.leftEar, kpMap.rightEar))
     ctx.strokeStyle = style
+    ctx.lineJoin = 'round'
     return { ctx, kpMap, minConfidence }
 }
 
 export function drawPose(keypoints, ctx, style = 'lime', minConfidence = 0.5) {
     ctx.save()
     ctx.beginPath()
-    ctx.lineJoin = 'round'
     ctx.lineWidth = 5
     let drawInfo = initDrawInfo(keypoints, ctx, style, minConfidence)
     drawHeadAndTorso(drawInfo)
@@ -104,9 +104,8 @@ export function drawPose(keypoints, ctx, style = 'lime', minConfidence = 0.5) {
 
 export function fillPose(keypoints, ctx, style = 'red', minConfidence = 0.5) {
     ctx.save()
-    ctx.lineJoin = 'round'
     ctx.lineWidth = 15
-    ctx.fillStyle = style
+    ctx.fillStyle = '#FFBB00'   //style
     let drawInfo = initDrawInfo(keypoints, ctx, style, minConfidence)
     fillHeadAndTorso(drawInfo)
     ctx.beginPath()
